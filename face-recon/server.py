@@ -67,3 +67,8 @@ def recognition_manager():
     else:
         # Handle non-GET and POST requests
         return 'BAD REQUEST.'
+
+
+if __name__ == "__main__":
+    # Run server
+    app.run(host="0.0.0.0", port=80)
