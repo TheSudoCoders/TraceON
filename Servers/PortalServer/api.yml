@@ -1,0 +1,19 @@
+swagger: "2.0"
+info:
+  title: Portal Server API
+  description: APIs to contact a DynamoDB database.
+  version: 1.0.0
+host: trace.sudofoundry.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /users:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in Markdown.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
