@@ -1,3 +1,6 @@
+import datetime
+
+
 def remove_directories(list_of_keys):
     """
     Removes directories from a list of S3 keys.
@@ -21,3 +24,12 @@ def disable_keyword_argument_on_none(fn):
     def wrapped(*args, **kwargs):
         return fn(*args, **{k: v for k, v in kwargs.items() if v is not None})
     return wrapped
+
+
+def time_now_standard():
+    """
+    Gets the time now, in the ISO8601 format used throughout the code
+    """
+    time_now = datetime.datetime.utcnow()
+    iso8601_now = time_now.strftime("%Y-%m-%dT%H:%M:%S%z")
+    return iso8601_now

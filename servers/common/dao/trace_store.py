@@ -1,11 +1,12 @@
 import boto3
-import datetime
 from boto3.dynamodb.conditions import Attr
-from common.utils import disable_keyword_argument_on_none
+from common.utils import disable_keyword_argument_on_none, time_now_standard
 
 ATTR_CREATED_AT = 'createdAt'
+ATTR_UPDATED_AT = 'updatedAt'
 ATTR_DEVICE_ID = 'deviceID'
 ATTR_FACE_HASH = 'faceHash'
+ATTR_EVENT_ID = 'eventID'
 
 
 class TraceStore:
@@ -13,20 +14,36 @@ class TraceStore:
         self.dynamodb = boto3.resource('dynamodb')
         self.table = self.dynamodb.Table(tablename)
 
-    def new_trace(self, facehash, deviceID):
-        time_now = datetime.datetime.utcnow()
-        iso8601_now = time_now.strftime("%Y-%m-%dT%H:%M:%S%z")
+    def new_trace(self, eventID, deviceID):
         self.table.update_item(
             Key={
-                ATTR_FACE_HASH: facehash,
-                ATTR_CREATED_AT: iso8601_now
+                ATTR_EVENT_ID: eventID,
             },
-            UpdateExpression="SET #attr_device_id = :new_val",
+            UpdateExpression="SET #attr_device_id = :device_id, #attr_created_at = if_not_exists(#attr_created_at, :time_now), #attr_updated_at = :time_now",
             ExpressionAttributeNames={
-                "#attr_device_id": ATTR_DEVICE_ID
+                "#attr_device_id": ATTR_DEVICE_ID,
+                "#attr_created_at": ATTR_CREATED_AT,
+                "#attr_updated_at": ATTR_UPDATED_AT
             },
             ExpressionAttributeValues={
-                ":new_val": deviceID
+                ":device_id": deviceID,
+                ":time_now": time_now_standard()
+            },
+        )
+
+    def upsert_user_for_trace(self, eventID, facehash):
+        self.table.update_item(
+            Key={
+                ATTR_EVENT_ID: eventID,
+            },
+            UpdateExpression="SET #attr_face_hash = if_not_exists(#attr_face_hash, :face_hash), #attr_updated_at = :time_now",
+            ExpressionAttributeNames={
+                "#attr_face_hash": ATTR_FACE_HASH,
+                "#attr_updated_at": ATTR_UPDATED_AT
+            },
+            ExpressionAttributeValues={
+                ":face_hash": facehash,
+                ":time_now": time_now_standard()
             },
         )
 
