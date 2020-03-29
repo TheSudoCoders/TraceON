@@ -38,6 +38,8 @@ def handler(event, context):
     # Update both the user stores and trace stores about the new person
     traceStore.new_trace(identifier, deviceID)
     userStore.upsert_user(identifier, last_known_device_id=deviceID)
+
+    # TODO(james): Need someway to submit jobs to ML
     
     return {
         'statusCode': 200,
