@@ -1,6 +1,6 @@
 import re
 import os
-from common.image_store import ImageStore
+from common.dao.image_store import ImageStore
 
 S3_BUCKET = os.getenv("S3_BUCKET")
 

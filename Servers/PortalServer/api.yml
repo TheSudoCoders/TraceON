@@ -1,19 +1,66 @@
 swagger: "2.0"
 info:
   title: Portal Server API
-  description: APIs to contact a DynamoDB database.
+  description: APIs to contact the SudoTrace database.
   version: 1.0.0
 host: trace.sudofoundry.com
 basePath: /v1
 schemes:
   - https
 paths:
-  /users:
+  /trace:
     get:
-      summary: Returns a list of users.
-      description: Optional extended description in Markdown.
+      summary: Checks if the user has been in direct contact with another user with a confirmed COVID-19 case.
+      description: >
+        The endpoint searches the user's contact to the devices compatible with this platform in the last 14 days (default). Then, all the users that interacted with the said device within a certain period of time (stride, default 2 hours) are checked if they have the COVID-19. The endpoint returns relevant data regarding the list of users (i.e. time of association with the device), and a array of user ids of direct confirmed cases.
       produces:
         - application/json
+      parameters:
+        - name: faceHash
+          in: query
+          description: The facehash of the user to contact trace (tracee)
+          type: string
+          required: true
+        - name: startDate
+          in: query
+          description: The date to start searching for contact tracing of the tracee
+          type: string
+          required: true
+        - name: endDate
+          in: query
+          description: The date to stop searching for contact tracing of the tracee
+          type: string
+          required: true
+        - name: stride
+          in: query
+          description: Number of minutes around the time of interaction of the tracee for each device to search for contacts
+          type: integer
+          default: 120
       responses:
         200:
           description: OK
+          schema:
+            $ref: '#/definitions/Tracing'
+        404:
+          description: Tracee not found
+
+definitions:
+  Tracing:
+    type: object
+    properties:
+      tracees:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+      isDirectContact:
+        type: boolean
+
+  User:
+    type: object
+    properties:
+      faceHash:
+        type: string
+      lastKnownDeviceID:
+        type: string
+      isConfirmedCase:
+        type: boolean

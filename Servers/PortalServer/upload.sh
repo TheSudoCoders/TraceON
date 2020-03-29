@@ -1,10 +1,12 @@
 #!/bin/bash
 # If lambda name exists, updates existing code. Otherwise, upload new.
 
-FUNCTION_NAME="sudotrace-iot"
-IAM_ROLE_NAME="sudotrace-iot-server-role"
+FUNCTION_NAME="sudotrace-portal"
+IAM_ROLE_NAME="sudotrace-portal-server-role"
 S3_BUCKET="sudotrace-images"
-DELIVERABLES="entry.py common/dao/image_store.py common/utils.py"
+USERSTORE_TABLENAME="sudotrace-user-db"
+TRACESTORE_TABLENAME="sudotrace-trace-db"
+DELIVERABLES="entry.py common/dao/image_store.py common/dao/trace_store.py common/dao/user_store.py common/utils.py common/api/trace.py"
 
 zip_deliverables() {
     echo "[Script] Zipping deliverables"
@@ -37,4 +39,4 @@ else
     rm /tmp/deliverables.zip
 fi
 
-aws lambda update-function-configuration --function-name ${FUNCTION_NAME} --environment Variables={S3_BUCKET=${S3_BUCKET}}
+aws lambda update-function-configuration --function-name ${FUNCTION_NAME} --environment "{\"Variables\":{\"S3_BUCKET\":\"$S3_BUCKET\", \"USERSTORE_TABLENAME\":\"$USERSTORE_TABLENAME\", \"TRACESTORE_TABLENAME\":\"$TRACESTORE_TABLENAME\"}}"
