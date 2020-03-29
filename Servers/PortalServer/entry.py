@@ -2,7 +2,7 @@ import os
 
 from common.dao.user_store import UserStore
 from common.dao.trace_store import TraceStore
-from common.api.trace import handle_trace
+from api.trace import handle_trace
 
 USERSTORE_TABLENAME = os.getenv("USERSTORE_TABLENAME")
 TRACESTORE_TABLENAME = os.getenv("TRACESTORE_TABLENAME")

@@ -1,4 +1,5 @@
 import boto3
+import datetime
 from boto3.dynamodb.conditions import Attr
 from common.utils import disable_keyword_argument_on_none
 
@@ -11,6 +12,23 @@ class TraceStore:
     def __init__(self, tablename):
         self.dynamodb = boto3.resource('dynamodb')
         self.table = self.dynamodb.Table(tablename)
+
+    def new_trace(self, facehash, deviceID):
+        time_now = datetime.datetime.utcnow()
+        iso8601_now = time_now.strftime("%Y-%m-%dT%H:%M:%S%z")
+        self.table.update_item(
+            Key={
+                ATTR_FACE_HASH: facehash,
+                ATTR_CREATED_AT: iso8601_now
+            },
+            UpdateExpression="SET #attr_device_id = :new_val",
+            ExpressionAttributeNames={
+                "#attr_device_id": ATTR_DEVICE_ID
+            },
+            ExpressionAttributeValues={
+                ":new_val": deviceID
+            },
+        )
 
     def get_device_contacts_time_range(self, facehash, date_range):
         start_date = date_range['start_date']

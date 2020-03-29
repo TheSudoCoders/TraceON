@@ -1,8 +1,14 @@
 import re
 import os
 from common.dao.image_store import ImageStore
+from common.dao.user_store import UserStore
+from common.dao.trace_store import TraceStore
 
 S3_BUCKET = os.getenv("S3_BUCKET")
+USERSTORE_TABLENAME = os.getenv("USERSTORE_TABLENAME")
+TRACESTORE_TABLENAME = os.getenv("TRACESTORE_TABLENAME")
+userStore = UserStore(USERSTORE_TABLENAME)
+traceStore = TraceStore(TRACESTORE_TABLENAME)
 
 
 def validate(event):
@@ -20,11 +26,18 @@ def handler(event, context):
             'body': 'Malformed/Invalid request'
         }
 
+    # Extract components we need from the event
     identifier = event['id']
     image = event['image']
-    
+    deviceID = event['deviceID']
+
+    # Upload the base64 image as a JPG
     imageStore = ImageStore(S3_BUCKET)
     imageStore.append(identifier, image)
+
+    # Update both the user stores and trace stores about the new person
+    traceStore.new_trace(identifier, deviceID)
+    userStore.upsert_user(identifier, last_known_device_id=deviceID)
     
     return {
         'statusCode': 200,
