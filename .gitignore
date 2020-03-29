@@ -1,0 +1,2 @@
+# added to ignore device id and keys for various cloud services
+camera/device_config*
