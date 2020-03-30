@@ -17,7 +17,12 @@ def sapien_identifier(url):
     # Load unknown image from given URL
     unknown_image = io.imread(url)
     # Generate face encoding for unknown image
-    unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
+    if len(face_recognition.face_encodings(unknown_image)):
+        # Check if a face exists in the image
+        unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
+    else:
+        # If no face is detected return None
+        return None
     try:
         # Try to load pickle file, if it exists
         sapien_encodings = pickle.load(open("sap.pkl", "rb"))
