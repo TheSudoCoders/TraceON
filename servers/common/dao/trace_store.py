@@ -1,5 +1,5 @@
 import boto3
-from boto3.dynamodb.conditions import Attr
+from boto3.dynamodb.conditions import Attr, And
 from common.utils import disable_keyword_argument_on_none, time_now_standard
 
 ATTR_CREATED_AT = 'createdAt'
@@ -47,11 +47,36 @@ class TraceStore:
             },
         )
 
+    def list_event_ids_for_facehash(self, facehash):
+        fe = Attr(ATTR_FACE_HASH).eq(facehash)
+        first_pass = True
+        last_evaluated_key = None
+
+        scan = disable_keyword_argument_on_none(self.table.scan)
+        while last_evaluated_key or first_pass:
+            scan_results = scan(
+                ProjectionExpression='{:s},{:s}'.format(ATTR_EVENT_ID, ATTR_UPDATED_AT),
+                FilterExpression=fe,
+                ExclusiveStartKey=last_evaluated_key
+            )
+            first_pass = False
+
+            if 'LastEvaluatedKey' in scan_results:
+                last_evaluated_key = scan_results['LastEvaluatedKey']
+            else:
+                last_evaluated_key = None
+                
+            for item in scan_results['Items']:
+                yield {
+                    'eventID': item[ATTR_EVENT_ID],
+                    'updatedAt': item[ATTR_UPDATED_AT]
+                }
+
     def get_device_contacts_time_range(self, facehash, date_range):
         start_date = date_range['start_date']
         end_date = date_range['end_date']
         
-        fe = Attr(ATTR_FACE_HASH).eq(facehash) and Attr(ATTR_CREATED_AT).between(start_date, end_date)
+        fe = Attr(ATTR_FACE_HASH).eq(facehash) & Attr(ATTR_CREATED_AT).between(start_date, end_date)
         last_evaluated_key = None
         first_pass = True
 
@@ -65,6 +90,11 @@ class TraceStore:
             )
             first_pass = False
 
+            if 'LastEvaluatedKey' in scan_results:
+                last_evaluated_key = scan_results['LastEvaluatedKey']
+            else:
+                last_evaluated_key = None
+
             for item in scan_results['Items']:
                 # NOTE: redeclared for documentation purposes
                 yield {
@@ -76,7 +106,7 @@ class TraceStore:
         start_date = date_range['start_date']
         end_date = date_range['end_date']
 
-        fe = Attr(ATTR_DEVICE_ID).eq(deviceid) and Attr(ATTR_CREATED_AT).between(start_date, end_date)
+        fe = Attr(ATTR_DEVICE_ID).eq(deviceid) & Attr(ATTR_CREATED_AT).between(start_date, end_date)
         last_evaluated_key = None
         first_pass = True
 
@@ -84,11 +114,22 @@ class TraceStore:
 
         while last_evaluated_key or first_pass:
             scan_results = scan(
-                ProjectionExpression=ATTR_FACE_HASH,
+                ProjectionExpression='{:s},{:s}'.format(ATTR_FACE_HASH, ATTR_UPDATED_AT),
                 FilterExpression=fe,
                 ExclusiveStartKey=last_evaluated_key
             )
             first_pass = False
 
+            if 'LastEvaluatedKey' in scan_results:
+                last_evaluated_key = scan_results['LastEvaluatedKey']
+            else:
+                last_evaluated_key = None
+                
             for item in scan_results['Items']:
-                yield item[ATTR_FACE_HASH]
+                if ATTR_FACE_HASH not in item:
+                    continue
+
+                yield {
+                    'faceHash': item[ATTR_FACE_HASH],
+                    'interactedOn': item[ATTR_UPDATED_AT]
+                }

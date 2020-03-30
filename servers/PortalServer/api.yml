@@ -43,8 +43,33 @@ paths:
             $ref: '#/definitions/Tracing'
         404:
           description: Tracee not found
+    /images:
+      get:
+        summary: Fetches pre-signed URLs for the latest pictures available for a FaceHash
+        description: >
+          At least one of the parameters must be present.
+        produces:
+          - application/json
+        parameters:
+          - name: faceHash
+            in: query
+            description: The faceHash of a user
+        responses:
+          200:
+            description: OK
+            schema:
+              $ref : '#/definitions/ImageURLs'
+          404:
+            description: FaceHash not found, or latest image not found.
+        
 
 definitions:
+  ImageURLs:
+    type: array
+    properties:
+      items:
+        type: string
+
   Tracing:
     type: object
     properties:

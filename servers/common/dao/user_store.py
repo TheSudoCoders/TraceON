@@ -14,7 +14,7 @@ class UserStore:
         self.dynamodb = boto3.resource('dynamodb')
         self.table = self.dynamodb.Table(tablename)
 
-    def upsert_user(self, facehash, *, last_known_device_id=None, is_confirmed_case=None):
+    def upsert_user(self, facehash, *, last_known_device_id=None, is_confirmed_case=False):
         time_now = datetime.datetime.utcnow()
         iso8601_now = time_now.strftime('%Y-%m-%dT%H:%M:%S%z')
 
@@ -43,7 +43,7 @@ class UserStore:
                 ATTR_FACE_HASH: facehash,
             },
             UpdateExpression=update_expression,
-            ExpressionAttributeNames=expressionAttributeNames,
+             ExpressionAttributeNames=expressionAttributeNames,
             ExpressionAttributeValues=expressionAttributeValues,
         )
 

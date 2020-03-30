@@ -24,7 +24,7 @@ def handle_trace(event, traceStore, userStore):
     })
     contactFaceHashList = []
     for device in devices:
-        timeContacted = datetime.datetime.strptime(device['createdAt'], "%Y-%m-%d") # TODO(james): Change this to full date+time+timezone
+        timeContacted = datetime.datetime.strptime(device['createdAt'], "%Y-%m-%dT%H:%M:%S")
         timeDelta = datetime.timedelta(minutes=stride/2)
         timeBegin = timeContacted - timeDelta
         timeEnd = timeContacted + timeDelta
@@ -34,12 +34,16 @@ def handle_trace(event, traceStore, userStore):
             'end_date': timeEnd.strftime("%Y-%m-%dT%H:%M:%S%Z"),
         })
         for faceHash in faceHashes:
-            contactFaceHashList.append(faceHash)
+            contactFaceHashList.append({
+                'deviceID': device['deviceID'],
+                'faceHash': faceHash['faceHash'],
+                'interactedOn': faceHash['interactedOn']
+            })
 
     contacts = []
     isDirectContact = False
     for contactFaceHash in contactFaceHashList:
-        user = userStore.get_user(contactFaceHash)
+        user = userStore.get_user(contactFaceHash['faceHash'])
         if user['isConfirmedCase']:
             isDirectContact = True
             
@@ -47,16 +51,21 @@ def handle_trace(event, traceStore, userStore):
             print(user['faceHash'])
             continue # NOTE: Oh no, we got into contact with ourselves!
 
-        contacts.append(user)
+        contacts.append({
+            'faceHash': user['faceHash'],
+            'lastKnownDeviceID': user['lastKnownDeviceID'],
+            'isConfirmedCase': bool(user['isConfirmedCase']),
+            'interactedDevice': contactFaceHash['deviceID'],
+            'interactedOn': contactFaceHash['interactedOn']
+        })
 
     return {
         'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*'
+        },
         'body': json.dumps({
-            'tracees': [{
-                'faceHash': contact['faceHash'],
-                'lastKnownDeviceID': contact['lastKnownDeviceID'],
-                'isConfirmedCase': bool(contact['isConfirmedCase'])
-            } for contact in contacts],
+            'tracees': contacts,
             'isDirectContact': isDirectContact
         })
     }

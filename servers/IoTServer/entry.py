@@ -56,14 +56,14 @@ def handler(event, context):
     with urllib.request.urlopen(req) as response:
         ml_response = response.read()
         resp = json.loads(ml_response)
-        if 'id' not in resp or resp['id'] is not event_identifier:
+        if 'id' not in resp or resp['id'] != event_identifier:
             print("Identifier mismatch, ID lambda: {:s}, ID ML: {:s}".format(event_identifier, resp['id']))
             return {
                 'statusCode': 502,
                 'body': 'Identifier mismatch'
             }
         
-        if 'facehash' not in resp or resp['facehash'] == None:
+        if 'facehash' not in resp or resp['facehash'] is None:
             print("Facehash not found for Event ID: {:s}".format(event_identifier))
             return {
                 'statusCode': 204,
