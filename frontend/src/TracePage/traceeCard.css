@@ -1,0 +1,27 @@
+.traceCard-TraceeBody {
+    margin: 10px 0px 10px 0px;
+}
+
+.traceCard-TraceePaper {
+    margin: 0 100px;
+    margin-top: 10px;
+    padding: 5px;
+    text-align: center;
+}
+
+.traceCard-TraceeContent .traceCard-TraceeMainImage {
+    width: 70%;
+}
+
+.traceCard-TraceeContent .traceCard-imageList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    overflow: hidden;
+    margin: 5px 10px;
+}
+
+.traceCard-TraceeContent .traceCard-TraceeImages {
+    flex-wrap: nowrap;
+    transform: translateZ(0);
+}

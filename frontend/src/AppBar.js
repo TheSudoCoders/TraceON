@@ -1,19 +1,23 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core';
+import AppBarMaterial from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
-const useStyles = makeStyles(themes => ({
+import "./appBar.css";
 
-}));
-
-export default function() {
-  const classes = useStyles();
+export default function AppBar(props) {
+  const {
+    setIsNavBarOpen
+  } = props;
 
   return (
-    <AppBar position='static'>
+    <AppBarMaterial position="static">
       <Toolbar>
+        <IconButton edge="start" className="menuButton" color="inherit" onClick={() => setIsNavBarOpen(true)}>
+          <MenuIcon />
+        </IconButton>
       </Toolbar>
-    </AppBar>
+    </AppBarMaterial>
   );
 }
