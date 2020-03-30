@@ -1,0 +1,5 @@
+.tracePage-div {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}

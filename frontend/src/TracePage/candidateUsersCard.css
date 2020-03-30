@@ -1,0 +1,13 @@
+.candidateUsersCard-paper {
+    margin: 50px 10px;
+    text-align: center;
+    flex: auto;
+}
+
+.candidateUsersCard-contacts {
+    
+}
+
+.candidateUsersCard-body {
+    margin: 10px;
+}

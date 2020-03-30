@@ -1,0 +1,120 @@
+swagger: "2.0"
+info:
+  title: Portal Server API
+  description: APIs to contact the SudoTrace database.
+  version: 1.0.0
+host: trace.sudofoundry.com
+basePath: /v1
+schemes:
+  - https
+paths:
+  /trace:
+    get:
+      summary: Checks if the user has been in direct contact with another user with a confirmed COVID-19 case.
+      description: >
+        The endpoint searches the user's contact to the devices compatible with this platform in the last 14 days (default). Then, all the users that interacted with the said device within a certain period of time (stride, default 2 hours) are checked if they have the COVID-19. The endpoint returns relevant data regarding the list of users (i.e. time of association with the device), and a array of user ids of direct confirmed cases.
+      produces:
+        - application/json
+      parameters:
+        - name: faceHash
+          in: query
+          description: The facehash of the user to contact trace (tracee)
+          type: string
+          required: true
+        - name: startDate
+          in: query
+          description: The date to start searching for contact tracing of the tracee
+          type: string
+          required: true
+        - name: endDate
+          in: query
+          description: The date to stop searching for contact tracing of the tracee
+          type: string
+          required: true
+        - name: stride
+          in: query
+          description: Number of minutes around the time of interaction of the tracee for each device to search for contacts
+          type: integer
+          default: 120
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Tracing'
+        404:
+          description: Tracee not found
+    /images:
+      get:
+        summary: Fetches pre-signed URLs for the latest pictures available for a FaceHash
+        description: >
+          At least one of the parameters must be present.
+        produces:
+          - application/json
+        parameters:
+          - name: faceHash
+            in: query
+            description: The faceHash of a user
+        responses:
+          200:
+            description: OK
+            schema:
+              $ref : '#/definitions/ImageURLs'
+          404:
+            description: FaceHash not found, or latest image not found.
+    /device:
+      get:
+        summary: Fetches event logs for each device
+        produces:
+          - application/json
+        parameters:
+          - name: deviceID
+            in: query
+            description: Device ID to grab the event logs for
+        responses:
+          200:
+            description: OK
+            schema:
+              $ref : '#/definitions/EventData'
+
+definitions:
+  EventData:
+    type: array
+    properties:
+      items:
+        $ref: '#/definitions/Event'
+
+  Event:
+    type: object
+    properties:
+      eventID:
+        type: string
+      updatedAt:
+        type: string
+      faceHash:
+        type: string
+  
+  ImageURLs:
+    type: array
+    properties:
+      items:
+        type: string
+
+  Tracing:
+    type: object
+    properties:
+      tracees:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+      isDirectContact:
+        type: boolean
+
+  User:
+    type: object
+    properties:
+      faceHash:
+        type: string
+      lastKnownDeviceID:
+        type: string
+      isConfirmedCase:
+        type: boolean
