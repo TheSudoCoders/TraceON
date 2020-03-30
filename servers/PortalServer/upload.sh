@@ -6,7 +6,7 @@ IAM_ROLE_NAME="sudotrace-portal-server-role"
 S3_BUCKET="sudotrace-images"
 USERSTORE_TABLENAME="sudotrace-user-db"
 TRACESTORE_TABLENAME="sudotrace-trace-db"
-DELIVERABLES="entry.py common/dao/image_store.py common/dao/trace_store.py common/dao/user_store.py common/utils.py api/trace.py api/images.py"
+DELIVERABLES="entry.py common/dao/image_store.py common/dao/trace_store.py common/dao/user_store.py common/utils.py api/trace.py api/images.py api/device.py"
 
 zip_deliverables() {
     echo "[Script] Zipping deliverables"

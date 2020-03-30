@@ -1,0 +1,24 @@
+.healthDeclarationPage-box {
+    margin: 100px;
+    line-height: 4;
+}
+
+@media print {    
+    .healthDeclarationPage-box {
+	margin: 10px;
+    }
+}
+
+.healthDeclarationBox-traceon-declare {
+    line-height: initial;
+}
+
+.healthDeclarationBox-traceon-invalidHash {
+    color: red;
+}
+
+#face-hash {
+    width: 18em;
+}
+
+	    

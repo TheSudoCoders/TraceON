@@ -47,6 +47,32 @@ class TraceStore:
             },
         )
 
+    def list_trace_events_for_device(self, deviceid):
+        fe = Attr(ATTR_DEVICE_ID).eq(deviceid)
+        first_pass = True
+        last_evaluated_key = None
+
+        scan = disable_keyword_argument_on_none(self.table.scan)
+        while last_evaluated_key or first_pass:
+            scan_results = scan(
+                ProjectionExpression='{:s},{:s},{:s}'.format(ATTR_EVENT_ID, ATTR_UPDATED_AT, ATTR_FACE_HASH),
+                FilterExpression=fe,
+                ExclusiveStartKey=last_evaluated_key
+            )
+            first_pass = False
+
+            if 'LastEvaluatedKey' in scan_results:
+                last_evaluated_key = scan_results['LastEvaluatedKey']
+            else:
+                last_evaluated_key = None
+                
+            for item in scan_results['Items']:
+                yield {
+                    'eventID': item[ATTR_EVENT_ID],
+                    'updatedAt': item[ATTR_UPDATED_AT],
+                    'faceHash': item[ATTR_FACE_HASH] if (ATTR_FACE_HASH in item) else None
+                }
+
     def list_event_ids_for_facehash(self, facehash):
         fe = Attr(ATTR_FACE_HASH).eq(facehash)
         first_pass = True

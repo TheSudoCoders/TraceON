@@ -14,6 +14,12 @@ def handle_trace(event, traceStore, userStore):
     startDate = queryParams['startDate']
     endDate = queryParams['endDate']
     stride = 120 # NOTE: Default specified by api.yml
+
+    if userFaceHash.strip() == "" or userStore.get_user(userFaceHash) is None:
+        return {
+            'statusCode': 404,
+            'body': 'Not found'
+        }
     
     if 'stride' in queryParams and queryParams['stride'] is not None:
         stride = int(queryParams['stride'])

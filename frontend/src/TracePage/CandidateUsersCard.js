@@ -34,7 +34,7 @@ export default function CandidateUsersCard(props) {
             </TableHead>
             <TableBody>
               {candidates.map(candidate => (
-                <TableRow>
+                <TableRow key={candidate.faceHash}>
                   <TableCell align="center"><Link to={`/tracing/${candidate.faceHash}`}>{candidate.faceHash}</Link></TableCell>
                   <TableCell align="center">{candidate.interactedOn}</TableCell>
                   <TableCell align="center">{candidate.interactedDevice}</TableCell>

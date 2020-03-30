@@ -1,0 +1,22 @@
+.devicePage-paper {
+    margin: 10px 10px;
+    padding: 10px;
+    text-align: center;
+    flex: auto;
+    flex-direction: column;
+    display: flex;
+    overflow-x: auto;
+}
+
+.devicePage-contacts {
+    width: 100%;
+}
+
+.devicePage-body {
+    margin: 30px;
+    overflow-y: auto;
+}
+
+.devicePage-body .devicePage-table {
+    overflow-y: auto;
+}

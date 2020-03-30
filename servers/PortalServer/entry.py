@@ -6,6 +6,7 @@ from common.dao.trace_store import TraceStore
 
 from api.trace import handle_trace
 from api.images import handle_images
+from api.device import handle_device
 
 USERSTORE_TABLENAME = os.getenv("USERSTORE_TABLENAME")
 TRACESTORE_TABLENAME = os.getenv("TRACESTORE_TABLENAME")
@@ -18,7 +19,8 @@ traceStore = TraceStore(TRACESTORE_TABLENAME)
 def handler(event, context):
     api_handler = {
         '/trace': lambda: handle_trace(event, traceStore, userStore),
-        '/images': lambda: handle_images(event, imageStore, traceStore)
+        '/images': lambda: handle_images(event, imageStore, traceStore),
+        '/device': lambda: handle_device(event, traceStore),
     }
 
     if 'resource' in event:

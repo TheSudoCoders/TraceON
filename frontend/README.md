@@ -11,7 +11,8 @@ export default {
 	backendUrl: '<backend url with scheme>',
 	paths: {
 		trace: '/trace',
-		images: '/images'
+		images: '/images',
+		device: '/device'
 	}
 };
 ```

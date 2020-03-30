@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import Leaflet from 'leaflet/dist/leaflet.js';
 
@@ -20,6 +21,7 @@ const MapPage = props => {
     shadowUrl: shadowIcon,
   });
 
+  // HACK(james): Hardcode marker positions and device IDs too. Faster to demonstrate the concept
   return (
     <Map center={[1.351616, 103.808053]} zoom={12.3}>
       <TileLayer
@@ -29,7 +31,7 @@ const MapPage = props => {
 
       <Marker position={[1.351616, 103.808053]} icon={icon}>
         <Popup>
-          NIKGAY
+          Device: <Link to={`/device/56df4a2141844a70b4c91df2ee58e5f7`}>56df4a2141844a70b4c91df2ee58e5f7</Link>
         </Popup>
       </Marker>
     </Map>

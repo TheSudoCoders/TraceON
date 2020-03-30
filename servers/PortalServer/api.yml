@@ -61,9 +61,38 @@ paths:
               $ref : '#/definitions/ImageURLs'
           404:
             description: FaceHash not found, or latest image not found.
-        
+    /device:
+      get:
+        summary: Fetches event logs for each device
+        produces:
+          - application/json
+        parameters:
+          - name: deviceID
+            in: query
+            description: Device ID to grab the event logs for
+        responses:
+          200:
+            description: OK
+            schema:
+              $ref : '#/definitions/EventData'
 
 definitions:
+  EventData:
+    type: array
+    properties:
+      items:
+        $ref: '#/definitions/Event'
+
+  Event:
+    type: object
+    properties:
+      eventID:
+        type: string
+      updatedAt:
+        type: string
+      faceHash:
+        type: string
+  
   ImageURLs:
     type: array
     properties:

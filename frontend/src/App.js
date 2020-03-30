@@ -4,6 +4,8 @@ import { HashRouter, Route } from 'react-router-dom';
 import AppBar from './AppBar';
 import NavDrawer from './NavDrawer';
 
+import DevicePage from './DevicePage';
+import HealthDeclarationPage from './HealthDeclarationPage';
 import MapPage from './MapPage';
 import TracePage from './TracePage';
 
@@ -22,6 +24,9 @@ function App() {
         </Route>
 
         <Route path="/tracing/:id" render={routeProps => <TracePage {...routeProps} />} />
+        <Route path="/device/:id" render={routeProps => <DevicePage {...routeProps} />} />
+        <Route path="/declaration" render={routeProps => <HealthDeclarationPage {...routeProps} />} />
+
       </div>
     </HashRouter >
   );
