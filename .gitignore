@@ -1,2 +1,3 @@
-# added to ignore device id and keys for various cloud services
 camera/device_config*
+.DS_Store
+__pycache__
