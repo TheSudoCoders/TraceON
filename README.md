@@ -1,11 +1,5 @@
 # TraceON
 
-Project TraceON aims to solve the issue by tagging individuals to checkpoints, and allows the health organizations of countries and communities to collaborate and improve the traceability of contagious diseases. The automatic tagging of individuals automates the need for health declaration forms, as information of the individuals is automatically recorded in the system alongside health screening facilities in public and private sectors alike, eliminating the need to sort through hundreds of digital and hand-written forms, freeing up manpower and time of an organization.
-
-Project TraceON achieves this following a 3-step process. Specific spots in a region can be installed with TraceON camera modules. Whenever a person walks by, the TraceON camera module triggers a TraceON event and sends a sequence of frames for a Machine Learning model to do automatic tagging of an individual. The Machine Learning model runs a pre-trained Convolutional Neural Network in the cloud, designed to recognize specifically human faces, whereby FaceHashes are generated for each unique face identified, whereby a new FaceHash will be created if an unknown face is detected, maintaining the anonymity of a person while making it possible to trace back to an individual. The results of a TraceON event are saved in a database securely, whereby authorized operators of TraceON can view past event histories that happened near a TraceON camera module for contact tracing and health declaration purposes.
-
-Should a contact trace of an individual be required, TraceON will produce a report for contact tracing specialists a list possibly affected individuals based on the event stride, scientifically defined by a combination of virus airborne survival time and whereabouts of the person within a disease quarantine period.
-
 ## Inspiration
 
 Amidst the COVID19 pandemic, tracing the source of a viral spread is one of the keys to containing the disease. However, according to an interview with a contact tracer specialist at Singapore General Hospital, it is extremely laborious and manual. Even though many techniques have been applied such as using guiding questions to trigger patient’s memories, receipts from taxis and restaurants as proof, even asking the patients’ close relatives, contact tracers still need to rely on the patients’ words as the source of truth, making it possible to lose some information and cause an accidental viral outbreak in a country.
@@ -24,4 +18,4 @@ TraceON was built with scalability, availability, security, and the ease of repl
 
 ## Current Problems
 
-Backend contacts ML in a straightforward fashion. If ML takes time to process events, so will the Lambda function. A viable method to solve this may be via a queue, or some other methods. Also, since each image from the devices are unique despite containing the same event ID, duplicates of the same event ID might get processed by the backend. Using a managed queue like AWS SQS can unnecessary duplicate processing.
+The backend contacts ML in a straightforward fashion. If ML takes time to process events, so will the Lambda function. A viable method to solve this may be via a queue, or some other methods. Also, since each image from the devices are unique despite containing the same event ID, duplicates of the same event ID might get processed by the backend. Using a managed queue like AWS SQS can unnecessary duplicate processing.
