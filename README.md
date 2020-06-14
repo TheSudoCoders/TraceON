@@ -1,3 +1,5 @@
+[![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/TeamSudoCoders/Granite)    [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 # TraceON
 
 Amidst the COVID19 pandemic, tracing the source of a viral spread is one of the keys to containing the disease. However, according to an interview with a contact tracer specialist at Singapore General Hospital, it is extremely laborious and manual. Even though many techniques have been applied such as using guiding questions to trigger patient’s memories, receipts from taxis and restaurants as proof, even asking the patients’ close relatives, contact tracers still need to rely on the patients’ words as the source of truth, making it possible to lose some information and cause an accidental viral outbreak in a country.
